@@ -1,0 +1,44 @@
+
+.xyz-content{
+    background-color: black; 
+    margin: 0%;
+}
+.content-title{
+    display: flex;
+    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.content-title .bar{
+    color: red;
+    padding: auto;
+}
+
+.content-title .head{
+    color: white;
+    padding: auto;
+}
+
+.movie-tile{
+    display: flex;
+    overflow-x: scroll;
+}
+
+.movie-tile::-webkit-scrollbar{
+    display:none;
+}
+
+.movie-tile .photo img{
+    height: 125px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); 
+    transition: all 0.5s;    
+}
+
+.movie-tile .photo img:hover{
+    transform: scale(1.1); 
+}

@@ -1,0 +1,47 @@
+.main{
+    background-color: red;
+    height: 500px;
+    background-image: url("https://hips.hearstapps.com/hmg-prod/images/a715c016-210714-r21j-00902542-1648053429.jpg");
+    background-size: cover;
+
+}
+
+
+.content{
+    width: 500px;
+    height: 150px;
+    margin-left: 30px;
+    position: relative;
+    top: 220px;
+    background-color: transparent;
+}
+
+.content .title{
+    color: red;
+    text-decoration: underline,red;
+    font-size: xx-large;
+    
+}
+
+.content .description{
+    color: white;
+    padding-top: 5px;
+    font-style: italic;
+    text-size-adjust: 5px;
+}
+
+.buttons button{
+    background-color: transparent;
+    color: white;
+    height: 60px;
+    width: 150px;
+    margin: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    border-radius: 5px;
+}
+
+button:hover{
+    color: black;
+    background-color: #e6e6e6;
+}

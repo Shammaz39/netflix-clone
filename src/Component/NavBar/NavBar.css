@@ -1,0 +1,18 @@
+.navbar{
+    display: flex;
+    background-color: #111;
+}
+
+.logo img{
+    height: 55px;
+    position: relative;
+
+}
+
+
+
+.avatar img{
+    height: 50px;
+    position: relative;
+    left: 1300px;
+}
