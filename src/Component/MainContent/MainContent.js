@@ -1,13 +1,46 @@
-import React from 'react'
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { ApiKey, BaseUrl, ImageUrl} from "../../constants/constants"
 import "./MainContent.css"
 
-function MainContent() {
-  return (
-    <div className='main'>
-      <div className='content'>
 
-        <h1 className='title'>Stranger Things</h1>
-        <p className='description'>To access your Netflix settings on the web, just head to Netflix.com and sign in to your account. Then, click the arrow next to your profile at the top and select Account. Et voilà, let the customization begin!</p>
+function MainContent() {
+  const [movie ,setMovie] = useState([])
+
+
+  useEffect(() => {
+    axios.get(`${BaseUrl}/trending/all/day?api_key=${ApiKey}`).then((response)=>{
+      setMovie(response.data.results[0])
+    })
+  
+  },[])
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const iUrl = windowWidth >= 650 ?  ImageUrl+movie.backdrop_path : ImageUrl+movie.poster_path;
+
+  useEffect(() => {
+      const handleWindowResize = () => {
+          setWindowWidth(window.innerWidth);
+      };
+      
+      window.addEventListener('resize', handleWindowResize);
+
+      return () => {
+          window.removeEventListener('resize', handleWindowResize);
+      }
+  }, []);
+
+
+  return (
+    <div className='main'
+    style={{backgroundImage:`url(${movie ? iUrl : ""})` }}>
+      <div className='content'>
+        <div className="head">
+          <span>|</span>
+          <h1 className='title'> {movie ? movie.name||movie.title : ""}</h1>
+        </div>
+        
+        <p className='description'>{movie ? movie.overview : ""}</p>
 
         <div className='buttons'>
           <button>▶ PLAY</button>

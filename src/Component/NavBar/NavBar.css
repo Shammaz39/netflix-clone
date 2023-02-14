@@ -9,10 +9,20 @@
 
 }
 
-
+.avatar{
+    height: 50px;
+    width: 50px ;
+    position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 7px;
+}
 
 .avatar img{
     height: 50px;
-    position: relative;
-    left: 1300px;
+    width: 50px ;
+    border-radius: 30px;
+
 }
+
+

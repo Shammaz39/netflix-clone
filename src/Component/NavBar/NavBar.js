@@ -9,10 +9,9 @@ function NavBar() {
       </div>
 
       <div className='avatar'>
-        <img src="https://i.pinimg.com/originals/2b/d3/7e/2bd37e0e17f7d04b9af65fb6d2d9e2c8.png" alt="avatr" />
+        <img src="https://blog.playstation.com/tachyon/2022/06/0c3c20a8d8514501524a0859461f391572ea6e61.jpg" alt="avatr" />
       </div>
     </div>
   )
 }
-
 export default NavBar
