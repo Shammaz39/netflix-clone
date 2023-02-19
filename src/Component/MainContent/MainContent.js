@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { ApiKey, BaseUrl, ImageUrl} from "../../constants/constants"
 import "./MainContent.css"
 
-// import YouTube from "react-youtube"
+import YouTube from "react-youtube"
 
 
 function MainContent() {
   const [movie ,setMovie] = useState([])
-  // const [urlId,setUrlId] = useState("");
+  const [urlId,setUrlId] = useState("");
 
 
   useEffect(() => {
@@ -33,34 +33,35 @@ function MainContent() {
       }
   }, []);
 
-  // const opts = {
-  //   height: '390',
-  //   width: '100%',
-  //   playerVars: {
-  //     // https://developers.google.com/youtube/player_parameters
-  //     autoplay: 1,
-  //   },
-  // };
+  const opts = {
+    height: '390',
+    width: '100%',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+    },
+  };
 
 
-  // const handleMovie = (id) =>{
+  const handleMovie = (id) =>{
       
-  //   console.log(id)
-  //   axios.get(`${BaseUrl}movie/${id}/videos?api_key=${ApiKey}&language=en-US`).then(response =>{
-  //     if(response.data.results.length !== 0){
-  //       setUrlId(response.data.results[0])
-  //     }else{
-  //       <p>Sorry No Content .....</p>
-  //     }
+    console.log(id)
+    axios.get(`${BaseUrl}movie/${id}/videos?api_key=${ApiKey}&language=en-US`).then(response =>{
+      if(response.data.results.length !== 0){
+        setUrlId(response.data.results[0])
+      }else{
+        <p>Sorry No Content .....</p>
+      }
 
-  //   })
+    })
     
-  // }
+  }
 
 
   return (
     <div className='main'
     style={{backgroundImage:`url(${movie ? iUrl : ""})` }}>
+      { urlId && <YouTube videoId={urlId.key} opts={opts} />} 
       <div className='content'>
         <div className="head">
           <span>|</span>
@@ -70,13 +71,13 @@ function MainContent() {
         <p className='description'>{movie ? movie.overview : ""}</p>
 
         <div className='buttons'>
-          <button>▶ PLAY</button>
-          {/* <button onClick={()=>{handleMovie(movie.id)}}>▶ PLAY</button> */}
+          {/* <button>▶ PLAY</button> */}
+          <button onClick={()=>{handleMovie(movie.id)}}>▶ PLAY</button>
           <button>📝 ADD LIST</button>
         </div>
       </div>
 
-      {/* { urlId && <YouTube videoId={urlId.key} opts={opts} />}  */}
+      
         
     </div>
   )
