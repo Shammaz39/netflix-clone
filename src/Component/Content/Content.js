@@ -7,6 +7,7 @@ function Content(props) {
 
     const [movie, setMovie] = useState([]);
     const [urlId,setUrlId] = useState("");
+    const [videoLoading, setVideoLoading] = useState(false);
 
     useEffect(() => {
       axios.get(props.url).then((response)=>{
@@ -25,17 +26,24 @@ function Content(props) {
       },
     };
 
-    const handleMovie = (id) =>{
+    const handleMovie = (obj) =>{
+      setVideoLoading(true);
+      const mediaType = obj.media_type || (obj.name ? 'tv' : 'movie');
       
-      console.log(id)
-      axios.get(`${BaseUrl}movie/${id}/videos?api_key=${ApiKey}&language=en-US`).then(response =>{
+      axios.get(`${BaseUrl}${mediaType}/${obj.id}/videos?api_key=${ApiKey}&language=en-US`).then(response =>{
         if(response.data.results.length !== 0){
           setUrlId(response.data.results[0])
         }else{
-          <p>Sorry No Content .....</p>
+          setUrlId(null);
+          console.log("Sorry No Content .....");
+          alert("No trailer found for this title.");
         }
-
-      })
+      }).catch(error => {
+        console.error(`Error fetching video for ${mediaType}`, error);
+        alert("Sorry, could not fetch the trailer from TMDB.");
+      }).finally(() => {
+        setVideoLoading(false);
+      });
     }
     
     
@@ -53,7 +61,7 @@ function Content(props) {
             movie.map((obj)=>{
                 return(
                     <div className='photo'>
-                        <img onClick={()=>{handleMovie(obj.id)}} src= {`${ImageUrl+obj.backdrop_path}`} alt="img" />
+                        <img onClick={()=>{handleMovie(obj)}} src= {`${ImageUrl+obj.backdrop_path}`} alt="img" />
                     </div>
                 )
             })
@@ -61,7 +69,25 @@ function Content(props) {
         }
         </div>
 
-        { urlId && <YouTube videoId={urlId.key} opts={opts} />} 
+        {videoLoading && <h3 style={{color: 'white', textAlign: 'center', marginTop: '20px'}}>Loading Trailer...</h3>}
+        {urlId && !videoLoading && (
+          <div className="video-overlay" onClick={() => setUrlId("")}>
+            <div className="video-container" onClick={(e) => e.stopPropagation()}>
+              <div className="video-header">
+                <button className="yt-close-btn" onClick={() => setUrlId("")}>✖ Close</button>
+                <a 
+                  href={`https://www.youtube.com/watch?v=${urlId.key}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="yt-open-btn"
+                >
+                  <span className="yt-icon">▶</span> Open in YouTube App
+                </a>
+              </div>
+              <YouTube videoId={urlId.key} opts={{...opts, width: '100%', height: '450'}} className="yt-player" />
+            </div>
+          </div>
+        )}
 
         
     </div>

@@ -21,6 +21,7 @@ function MainContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [videoLoading, setVideoLoading] = useState(false);
 
   // Fetch trending movies
   useEffect(() => {
@@ -66,17 +67,26 @@ function MainContent() {
   };
 
   const handleMovie = (id) => {
+    setVideoLoading(true);
+    // TMDB has different endpoints for TV vs Movies. We check media_type or if it has a 'name' (TV) vs 'title' (Movie)
+    const mediaType = movie.media_type || (movie.name ? 'tv' : 'movie');
+
     axios
-      .get(`${BaseUrl}movie/${id}/videos?api_key=${ApiKey}&language=en-US`)
+      .get(`${BaseUrl}${mediaType}/${id}/videos?api_key=${ApiKey}&language=en-US`)
       .then((response) => {
         if (response.data.results.length > 0) {
           setUrlId(response.data.results[0]);
         } else {
           console.log("No video available");
+          alert("No trailer found for this title.");
         }
       })
       .catch((error) => {
-        console.error("Error fetching movie videos", error);
+        console.error(`Error fetching videos for ${mediaType}`, error);
+        alert("Sorry, could not fetch the trailer from TMDB.");
+      })
+      .finally(() => {
+        setVideoLoading(false);
       });
   };
 
@@ -92,7 +102,24 @@ function MainContent() {
           : "none",
       }}
     >
-      {urlId && <YouTube videoId={urlId.key} opts={opts} />}
+      {urlId && (
+        <div className="video-overlay" onClick={() => setUrlId("")}>
+          <div className="video-container" onClick={(e) => e.stopPropagation()}>
+            <div className="video-header">
+              <button className="yt-close-btn" onClick={() => setUrlId("")}>✖ Close</button>
+              <a 
+                href={`https://www.youtube.com/watch?v=${urlId.key}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="yt-open-btn"
+              >
+                <span className="yt-icon">▶</span> Open in YouTube App
+              </a>
+            </div>
+            <YouTube videoId={urlId.key} opts={{...opts, width: '100%', height: windowWidth < 650 ? '250' : '450'}} className="yt-player" />
+          </div>
+        </div>
+      )}
       <div className="content">
         <div className="head">
           <span>|</span>
@@ -100,7 +127,11 @@ function MainContent() {
         </div>
         <p className="description">{movie ? movie.overview : "No description available"}</p>
         <div className="buttons">
-          {movie && <button onClick={() => handleMovie(movie.id)}>▶ PLAY</button>}
+          {movie && (
+            <button onClick={() => handleMovie(movie.id)} disabled={videoLoading} className={videoLoading ? "loading-button" : ""}>
+              {videoLoading ? "Loading..." : "▶ PLAY"}
+            </button>
+          )}
           <button>📝 ADD LIST</button>
         </div>
       </div>
